@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
@@ -28,7 +28,7 @@ const FileUploader = () => {
       const wb = XLSX.read(bstr, { type: 'binary' });
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
-      const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
       setExcelData(data);
       setFileName(file.name);
       setFileUploaded(true);
@@ -39,7 +39,7 @@ const FileUploader = () => {
   const handleProcess = () => {
     alert('Processing the BOM data...');
     console.log('Excel data:', excelData);
-    // Add processing logic here
+    // Add custom processing logic here
   };
 
   return (
@@ -77,25 +77,25 @@ const FileUploader = () => {
             <h2 className="text-lg font-semibold text-gray-800">📄 Preview of: {fileName}</h2>
           </div>
 
-          <div className="overflow-auto max-h-[400px] rounded-lg border border-gray-200">
-            <table className="min-w-full border-collapse text-sm text-left text-gray-700">
+          <div className="overflow-auto max-h-[500px] border border-gray-200 rounded-lg">
+            <table className="min-w-full border-collapse text-sm text-left text-gray-700 whitespace-nowrap">
               <thead className="bg-blue-50 sticky top-0 z-10 text-gray-800 text-xs uppercase tracking-wide">
-                {excelData[0] && (
-                  <tr>
-                    {excelData[0].map((header, i) => (
-                      <th key={i} className="border px-4 py-3 font-semibold">
-                        {header || `Column ${i + 1}`}
-                      </th>
-                    ))}
-                  </tr>
-                )}
+                <tr>
+                  <th className="border px-4 py-3 font-semibold">#</th>
+                  {excelData[0]?.map((header, i) => (
+                    <th key={i} className="border px-4 py-3 font-semibold">
+                      {header || `Column ${i + 1}`}
+                    </th>
+                  ))}
+                </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {excelData.slice(1).map((row, rowIndex) => (
                   <tr key={rowIndex} className="hover:bg-blue-50 transition">
-                    {row.map((cell, cellIndex) => (
+                    <td className="px-4 py-2 border text-gray-500">{rowIndex + 1}</td>
+                    {excelData[0]?.map((_, cellIndex) => (
                       <td key={cellIndex} className="px-4 py-2 border">
-                        {cell}
+                        {row[cellIndex]}
                       </td>
                     ))}
                   </tr>
